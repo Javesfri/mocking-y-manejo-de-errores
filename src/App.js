@@ -14,6 +14,7 @@ import initializePassport from './config/passport.js'
 import mongoose from "mongoose";
 import MongoStore from 'connect-mongo'
 import session from 'express-session'
+import routerMocking from './routes/mocking.routes.js';
 
 const app = express();
 const PORT = 8080;
@@ -74,5 +75,6 @@ app.use("/api/products", routerProduct);
 app.use("/api/carts", routerCart);
 app.use('/user/', routerUser)
 app.use('/api/session/', routerSession)
+app.use('/mockingproducts',routerMocking)
 
 
