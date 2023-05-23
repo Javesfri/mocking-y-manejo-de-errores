@@ -3,6 +3,9 @@ import passport from 'passport'
 import {findUserByEmail, findUserById,createUser } from "../services/userService.js"
 import { createCart } from "../services/cartService.js"
 import { createHash, validatePassword } from '../utils/bcrypt.js'
+import EErrors from '../utils/errors/enums.js'
+import { generateUserErrorInfo } from '../utils/errors/info.js'
+import CustomError from '../utils/errors/CustomError.js'
 import "dotenv/config.js"
 
 //Passport se va a manejar como si fuera un middleware 
@@ -17,6 +20,16 @@ const initializePassport = () => {
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             //Validar y crear Usuario
             const bodyReq = {...req.body}
+            const{first_name,last_name,email,age}=req.body
+
+            if(!first_name||!last_name||!email||!age){
+                CustomError.createError({
+                    name:"User creeation error",
+                    cause:generateUserErrorInfo({first_name,last_name,email,age}),
+                    message:"Error Trying to create User",
+                    code: EErrors.INVALID_TYPES_ERROR,
+                })
+            }
             try {
                 const user = await findUserByEmail(username) //Username = email
 

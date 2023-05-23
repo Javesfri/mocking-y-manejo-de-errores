@@ -6,7 +6,7 @@ import { isLogin,roleVerification,isAuthenticated } from "../middlewares/authent
 const routerSession = Router();
 
 routerSession.post("/register", passport.authenticate("register"), createUser);
-routerSession.get("/register",isAuthenticated, (req, res) => {
+routerSession.get("/register",isLogin, (req, res) => {
   res.render("register", {});
 });
 routerSession.post("/login", passport.authenticate("login"), testLogin);

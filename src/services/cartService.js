@@ -1,6 +1,8 @@
 import cartModel from "../models/MongoDB/cartModel.js"
 import {getProductById,productUpdate} from "./productService.js"
-
+import EErrors from '../utils/errors/enums.js'
+import { generateAddToCartErrorInfo } from '../utils/errors/info.js'
+import CustomError from '../utils/errors/CustomError.js'
 export const addProductToCart = async (idCart,idProduct)=>{
     let product= await getProductById(idProduct)
     if(await product && await product.stock >0){
@@ -23,7 +25,12 @@ export const addProductToCart = async (idCart,idProduct)=>{
             return error
         }
     }
-    console.log("no hay stock")
+    CustomError.createError({
+        name:"Add product to cart Error",
+        cause:generateAddToCartErrorInfo(product),
+        message:"Error Trying to add product to Cart",
+        code: EErrors.CART_ERROR,
+    })
 }
 
 export const deleteProductFromCart = async (idCart, id)=>{
